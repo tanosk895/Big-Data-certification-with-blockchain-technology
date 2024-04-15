@@ -37,7 +37,7 @@ Installation:
 To download the libraries, run npm install
 
 Execution
-To download the libraries, run npm run start,
+To run, run npm run start,
 
 
 
@@ -92,4 +92,4 @@ Blockchain (Sistema): Al ricevere il messaggio dal sistema backend, il sistema b
   Per scaricare le librerie `npm install`
 
 ###### Esecuzione 
-Per scaricare le librerie `npm run start`, 
+Per eseguire `npm run start`, 
