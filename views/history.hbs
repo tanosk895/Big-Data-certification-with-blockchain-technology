@@ -1,0 +1,113 @@
+
+  <h1>{{title}}</h1>
+    <div id="myChart" style="height:400px; width:auto;"></div> 
+   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.css">
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.cursor.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.dateAxisRenderer.min.js"></script>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){   
+
+ const socket = io('http://localhost:3000'); // Sostituisci con l'URL del tuo server WebSocket
+ let data = [];
+ socket.on('connect', function() {
+      console.log('Connected to server');
+    });
+
+    socket.on('disconnect', function() {
+      console.log('Disconnected from server');
+    });
+
+    socket.on('broadcastMessage', function(msg) {
+      console.log(msg)
+      data.push(msg)
+    });
+
+    var t = 1000;    
+    var x = (new Date()).getTime(); 
+    // current time    
+    var n = 50;    
+
+    for(i=0; i<n; i++){         
+        data.push([x - (n-1-i)*t,0]);      
+    }       
+    var options = {
+        cursor : {
+            show:true,
+            zoom:true, 
+            looseZoom: true, 
+            showTooltip:true, 
+            followMouse: true, 
+            showTooltipOutsideZoom: true, 
+            showTooltipDataPosition: true,
+            constrainOutsideZoom: true,
+        },        
+        axes: {                  
+            xaxis: {                        
+                numberTicks: 20,
+                renderer:$.jqplot.DateAxisRenderer,
+                tickRenderer: $.jqplot.CanvasAxisTickRenderer, 
+                tickOptions:{ formatString:'%H:%M:%S', angle: -30 }, 
+                min : data[0][0],  
+                max: data[data.length-1][0],
+            },
+            yaxis: {             
+                min:0,              
+                max: 20,             
+                numberTicks: 20,
+                tickOptions:{formatString:'%.1f' }                 
+            }             
+        },             
+        seriesDefaults: {                  
+            rendererOptions: { smooth: true}  
+        }      
+    };      
+    
+    var plot1 = $.jqplot ('myChart', [data],options);       
+
+    // Salva lo stato dello zoom corrente
+    var prevZoom = null;
+    $("#myChart").bind('jqplotZoom', function(event, gridpos, datapos, plot, cursor){
+        prevZoom = cursor;
+    });
+
+    function doUpdate() {             
+        if(data.length > n-1){          
+            data.shift();       
+        }       
+
+        const min = 15;
+        const max = 19;
+        var y = Math.random() * (max - min) + min;       
+        var x = (new Date()).getTime();       
+      //  data.push([x,y]);       
+
+        if (plot1) {      
+            // Salva lo stato dello zoom corrente prima di distruggere il grafico
+            var prevXMin = plot1.axes.xaxis.min;
+            var prevXMax = plot1.axes.xaxis.max;
+            plot1.destroy();       
+        }       
+        plot1.series[0].data = data;        
+        options.axes.xaxis.min = data[0][0];
+        options.axes.xaxis.max = data[data.length-1][0];
+        plot1 = $.jqplot ('myChart', [data],options);
+
+        // Ripristina lo stato dello zoom dopo aver ricreato il grafico
+        if(prevZoom !== null) {
+            plot1.target.bind('jqplotZoom', prevZoom);
+        } else {
+            // Se non c'è uno stato di zoom precedente, reimposta lo zoom ai limiti precedenti
+            plot1.axes.xaxis.min = prevXMin;
+            plot1.axes.xaxis.max = prevXMax;
+            plot1.resetZoom();
+        }
+        setTimeout(doUpdate, t);
+    } 
+    doUpdate();             
+});
+
+    </script> 

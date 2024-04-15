@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Upload Large File with Resumable.js</title>
+  <!-- Bootstrap CSS -->
+</head>
+<body>
+  <div class="container mt-5">
+    <h1>Upload Large File with Resumable.js</h1>
+    <input type="file" id="fileInput" class="form-control mb-3">
+    <button id="uploadButton" class="btn btn-primary">Upload</button>
+  </div>
+
+  <!-- Resumable.js -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/resumable.js/1.0.3/resumable.min.js" integrity="sha512-OmtdY/NUD+0FF4ebU+B5sszC7gAomj26TfyUUq6191kbbtBZx0RJNqcpGg5mouTvUh7NI0cbU9PStfRl8uE/rw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+  <script>
+    $(document).ready(function() {
+      var r = new Resumable({
+        target: '/upload',
+        chunkSize: 10 * 1024 * 1024, // 10 MB chunk size
+        simultaneousUploads: 1, // Upload one chunk at a time
+        testChunks: false // Disable chunk testing
+      });
+
+      r.assignBrowse(document.getElementById('fileInput'));
+
+      r.on('fileAdded', function(file, event) {
+        // You could trigger upload here, or show UI indicators
+      });
+
+      $('#uploadButton').on('click', function() {
+        r.upload();
+      });
+
+      r.on('complete', function() {
+        console.log('File uploaded successfully');
+      });
+
+      r.on('error', function(message, file) {
+        console.error('Error uploading file:', message);
+      });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,56 @@
+<style>
+    .con {
+    width: 380px; /* Larghezza della finestra */
+    height: 500px; /* Altezza massima della finestra */
+    overflow: auto; /* Abilita lo scrolling */
+    border: 1px solid #ccc; /* Opzionale: aggiunge un bordo per evidenziare la finestra */
+}
+
+.content {
+    /* Stili per il contenuto all'interno della finestra */
+    padding: 10px;
+}
+</style>
+<h1>{{title}}</h1>
+<p>{{title}}</p>
+<div class="container">
+  <div class="row">
+     <div class="con">
+        <div class="content">
+    <div class="col-sm">
+    {{#each dati}}
+        <li>{{this.level}}</li>
+        <li>{{this.path}}</li>
+        <li>{{this.timestamp}}</li>
+    {{/each}}
+     </div>
+     </div>
+   </div>
+     <div class="col-sm">
+     <button class="btn btn-primary" id="download" >Scarica</button>
+     </div>
+     <div class="col-sm">
+      One of three columns
+     </div>
+ </div>
+</div>
+<tr>
+
+</tr>
+   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.css">
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.cursor.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.dateAxisRenderer.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+<script type="text/javascript">
+    $(document).ready(function(){
+
+    $("#download").click(function(){
+        // URL del file da scaricare
+       //  var fileUrl = "uploads/buffer04-03-2024 09:40.json";
+        // Effettua il download del file
+        window.location.href = fileUrl;
+    });
+});
+</script>

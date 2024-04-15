@@ -1,0 +1,64 @@
+<h1>{{title}}</h1>
+<p>Welcome to {{title}}</p>
+
+  <label id="lblcheck">Formato row</label> <input type="checkbox" id="myCheckbox">
+<form>
+  <div id="two">
+    <label for="">Inserisci formato json</label>
+    <div class="col-sm-10">
+     <textarea class="form-control" id="area" rows="3"></textarea>
+    </div>
+  </div> <hr>
+ <div id="app"></div>
+  <div class="form-group row">
+    <div class="col-sm-10">
+      <button id="check" class="btn btn-primary">Controlla</button>
+    </div>
+  </div>
+</form>
+<div id="info"></div>
+   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.css">
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/jquery.jqplot.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.cursor.min.js"></script>
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jqPlot/1.0.9/plugins/jqplot.dateAxisRenderer.min.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.3.1/socket.io.js"></script>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.18.1/moment.min.js"></script>
+<script type="text/javascript">
+
+    let currentDate = moment().add(1, 'hours').toISOString().slice(0, 19);
+    //console.log(currentDate)
+
+
+ $("#check").click(function(e){
+    e.preventDefault();
+    let text = $("#area").val().trim();
+    
+    console.log(text);
+    $("#app").empty();
+    $("#app").addClass('alert alert-dark').text(text);
+     $.ajax({
+      url: '/check',
+      type: 'POST',
+      contentType: 'application/json',
+      data: (text),
+      success: function(response) {
+          $("#info").empty();
+          $("#info").removeClass();
+       if(response.cert){
+          $("#info").addClass('alert alert-success').html("il dato è certificato")
+       } else {
+           $("#info").addClass('alert alert-danger').html("il dato  non è certificato")
+       }
+      },
+      error: function(xhr, status, error) {
+        console.error('Errore durante la richiesta:', error);
+        // Puoi gestire l'errore qui
+      }
+   });
+});
+</script>
+{ "level": "18.71", "path": "/uploads/buffer07-03-2024 14:52.json", "timestamp": 1709819535000 }
+{ "level": "16.65", "path": "./uploads/buffer04-03-2024 23:47.json", "timestamp": 1709592476000 }
+<br>
+{ "level": "18.10", "path": "./uploads/buffer05-03-2024 01:43.json", "timestamp": 1709599408000 }
